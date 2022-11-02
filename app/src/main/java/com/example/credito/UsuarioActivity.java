@@ -3,6 +3,7 @@ package com.example.credito;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ public class UsuarioActivity extends AppCompatActivity {
     ClsOpenHelper admin=new ClsOpenHelper(this,"Banco.db",null,1);
     String identificacion,nombre,profesion,empresa,salario,extras,gastos;
     Long respuesta;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,38 @@ public class UsuarioActivity extends AppCompatActivity {
             fila.close();
         }
     }
+
+    public void Consultar(View view){
+        identificacion=jetidentificacion.getText().toString();
+        if (identificacion.isEmpty()){
+            Toast.makeText(this, "Identificacion es requerida para la consulta", Toast.LENGTH_SHORT).show();
+            jetidentificacion.requestFocus();
+        }
+        else
+        {
+            SQLiteDatabase fila=admin.getReadableDatabase();
+            Cursor dato=fila.rawQuery("select * from TblCliente where identificacion='"+identificacion+"'",null);
+            if(dato.moveToNext()){
+                jetnombre.setText(dato.getString(1));
+                jetprofesion.setText(dato.getString(2));
+                jetempresa.setText(dato.getString(3));
+                jetsalario.setText(dato.getString(4));
+                jetextras.setText(dato.getString(5));
+                jetgastos.setText(dato.getString(6));
+
+                if (dato.getString(7).equals("si")){
+                    jcbactivo.setChecked(true);
+                }
+                else {
+                    jcbactivo.setChecked(false);
+                }
+            }
+            else{
+                Toast.makeText(this, "Cliente no registrado", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void Limpiar_campos(){
         jetidentificacion.setText("");
         jetnombre.setText("");
