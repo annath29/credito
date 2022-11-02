@@ -106,7 +106,6 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         }
     }
-
     private void Limpiar_campos(){
         jetidentificacion.setText("");
         jetnombre.setText("");
