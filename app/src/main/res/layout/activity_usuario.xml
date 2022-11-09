@@ -36,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="Buscar"
             android:text="Buscar" />
     </LinearLayout>
 
@@ -121,15 +122,6 @@
             android:onClick="Guardar"
             android:text="Guardar" />
 
-        <Button
-            android:id="@+id/btconsultar"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:onClick="Consultar"
-            android:text="Consultar" />
     </LinearLayout>
 
     <LinearLayout
@@ -144,6 +136,7 @@
             android:layout_marginEnd="2dp"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
+            android:onClick="Anular"
             android:text="Anular" />
 
         <Button
@@ -153,6 +146,7 @@
             android:layout_marginStart="2dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
+            android:onClick="Cancelar"
             android:text="Cancelar" />
 
     </LinearLayout>
@@ -164,6 +158,7 @@
         android:textSize="28dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="Regresar"
         android:text="Regresar" />
 
 
