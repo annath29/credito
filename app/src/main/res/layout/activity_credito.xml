@@ -11,9 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="Credito" />
+        android:text="CREDITO" />
 
     <EditText
         android:id="@+id/etcodigoPrestamo"
@@ -46,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="Buscar_cliente"
             android:text="Buscar" />
     </LinearLayout>
 
@@ -64,7 +66,7 @@
             android:gravity="center"
             android:hint="Nombre" />
         <TextView
-            android:id="@+id/tvProfesion"
+            android:id="@+id/tvprofesion"
             android:textSize="25dp"
             android:gravity="center"
             android:layout_width="wrap_content"
@@ -87,7 +89,7 @@
             android:gravity="center"
             android:hint="Salario" />
         <TextView
-            android:id="@+id/tvingresosextra"
+            android:id="@+id/tvextras"
             android:textSize="25dp"
             android:gravity="center"
             android:layout_width="wrap_content"
@@ -97,13 +99,33 @@
 
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="61dp"
         android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:text="Gastos" />
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/tvgastos"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:hint="Gastos" />
+
+        <CheckBox
+            android:id="@+id/cbactivo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:enabled="false"
+            android:text="Activo" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -124,6 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="Ejecutar"
             android:text="Ejecutar" />
 
     </LinearLayout>
@@ -141,6 +164,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
+            android:onClick="Guardar_credito"
             android:text="Guardar" />
 
         <Button
@@ -150,6 +174,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:onClick="Consultar_credito"
             android:text="Consultar" />
     </LinearLayout>
 
@@ -180,7 +205,7 @@
 
     <Button
         android:id="@+id/btcancelar"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:textSize="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
