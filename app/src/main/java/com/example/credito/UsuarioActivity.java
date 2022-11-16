@@ -121,7 +121,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
         if(sw==0)
         {
-            Toast.makeText(this, "Debe primero consultar para anular", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Debe primero buscar para anular", Toast.LENGTH_SHORT).show();
             jetidentificacion.requestFocus();
         }
         else

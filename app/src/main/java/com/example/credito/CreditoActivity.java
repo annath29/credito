@@ -3,6 +3,7 @@ package com.example.credito;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class CreditoActivity extends AppCompatActivity {
     String identificacion,codigo,nombre,profesion;
     int salario,extras,gastos,valorprestamo=0;
     long resp;
-    byte id,sw;
+    byte id,sw,ej;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +62,13 @@ public class CreditoActivity extends AppCompatActivity {
                 jtvsalario.setText(dato.getString(4));
                 jtvextras.setText(dato.getString(5));
                 jtvgastos.setText(dato.getString(6));
-                id=1;
                 if (dato.getString(7).equals("si")){
                     jcbactivo.setChecked(true);
                 }
                 else {
                     jcbactivo.setChecked(false);
                 }
+                id=1;
             }
             else{
                 Toast.makeText(this, "Cliente no registrado", Toast.LENGTH_SHORT).show();
@@ -76,8 +77,7 @@ public class CreditoActivity extends AppCompatActivity {
     }
 
     public void Ejecutar(View view){
-        if(id==0)
-        {
+        if(id==0) {
             Toast.makeText(this, "Debe primero buscar cliente primero para ejecutar un credito", Toast.LENGTH_SHORT).show();
             jetidentificacion.requestFocus();
         }
@@ -94,22 +94,28 @@ public class CreditoActivity extends AppCompatActivity {
                     extras=Integer.parseInt(jtvextras.getText().toString());
                     //Calculo valor del Prestamo
                     valorprestamo=(salario+extras-gastos)*10;
-                    //muestro en pantalla el valor del prestamo
-                    jtvvalorprestamo.setText(String.valueOf(valorprestamo));
+                    //compruebo que se pueda prestar
+                    if(valorprestamo>0) {
+                        //muestro en pantalla el valor del prestamo
+                        jtvvalorprestamo.setText(String.valueOf(valorprestamo));
+                        ej=1;
+                    }
+                    else {
+                        ej=0;
+                        Toast.makeText(this, "Ups!,no le podemos prestar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "La relacion entre sus ingresos y gastos no le permite tener un credito", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-
         }
     }
 
     public void Guardar_credito(View view)
     {
-        if (valorprestamo==0)
-        {
+        if (ej==0) {
             Toast.makeText(this, "Primero debe ejecutar", Toast.LENGTH_SHORT).show();
         }
-        else
-        {
+        else {
             codigo = jetcodigoPrestamo.getText().toString();
             if (codigo.isEmpty()) {
                 Toast.makeText(this, "Debe identificar su credito con un codigo", Toast.LENGTH_SHORT).show();
@@ -119,30 +125,26 @@ public class CreditoActivity extends AppCompatActivity {
                 SQLiteDatabase fila=admin.getReadableDatabase();
                 Cursor cliente=fila.rawQuery("select * from TblCredito where cod_credito='"+codigo+"'",null);
                 if(cliente.moveToNext()){
-
+                    //si ya tiene un credito activo aui se puede hacer la comprobacion para que no le deje crear otro o en ejecutar con el id
                     Toast.makeText(this, "Codigo registrado, ingrese otro codigo", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
+                else {
                     SQLiteDatabase row=admin.getWritableDatabase();
                     ContentValues registro = new ContentValues();
                     registro.put("identificacion",identificacion);
                     registro.put("cod_credito",codigo);
                     registro.put("valor_prestamo",valorprestamo);
-
                     resp=row.insert("TblCredito",null,registro);
-                    if (resp ==0)
-                    {
+                    if (resp ==0) {
                         Toast.makeText(this, "Error guardando credito", Toast.LENGTH_SHORT).show();
                     }
-                    else
-                    {
+                    else {
                         Toast.makeText(this, "Credito guardado", Toast.LENGTH_SHORT).show();
                         Limpiar_campos();
                     }
-                    fila.close();
+                    row.close();
                 }
-
+                fila.close();
             }
         }
     }
@@ -185,8 +187,50 @@ public class CreditoActivity extends AppCompatActivity {
 
     public void Anular_credito(View view)
     {
-        
+        if(sw==0) {
+            Toast.makeText(this, "Debe consultar un credito para anular", Toast.LENGTH_SHORT).show();
+            jetcodigoPrestamo.requestFocus();
+        }
+        else {
+            codigo= jetcodigoPrestamo.getText().toString();
+            if (codigo.isEmpty()) {
+                Toast.makeText(this, "codigo requerido", Toast.LENGTH_SHORT).show();
+                jetcodigoPrestamo.requestFocus();
+            }
+            else {
+                SQLiteDatabase fila=admin.getReadableDatabase();
+                Cursor cliente=fila.rawQuery("select * from TblCredito where cod_credito='"+codigo+"'",null);
+                if(cliente.moveToNext() && cliente.getString(3).equals("no")){
+
+                    Toast.makeText(this, "Credito inactivo, no se puede anular", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    SQLiteDatabase row=admin.getWritableDatabase();
+                    ContentValues registro = new ContentValues();
+                    registro.put("activo","no");
+                    resp=row.update("TblCredito",registro,"cod_credito='"+codigo+"'",null);
+                    sw=0;
+                    if (resp ==0) {
+                        Toast.makeText(this, "Error Anulando credito", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(this, "Credito anulado", Toast.LENGTH_SHORT).show();
+                        Limpiar_campos();
+                    }
+                    row.close();
+                }
+                fila.close();
+            }
+        }
     }
+    public  void Regresarc(View view){
+        Intent intmenu= new Intent(this,MenuActivity.class);
+        startActivity(intmenu);
+    }
+    public void Cancelarc(View view){
+        Limpiar_campos();
+    }
+
     private void Limpiar_campos(){
         jetcodigoPrestamo.setText("");
         jetidentificacion.setText("");
@@ -200,6 +244,7 @@ public class CreditoActivity extends AppCompatActivity {
         jetidentificacion.requestFocus();
         id=0;
         sw=0;
+        ej=0;
     }
 
 }
